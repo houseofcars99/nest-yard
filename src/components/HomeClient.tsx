@@ -131,7 +131,7 @@ export function HomeClient() {
           </div>
           <div className="editorial-copy">
             <p className="eyebrow">Nasza zasada</p>
-            <h2>Nie więcej rzeczy.<br /><em>Lepsze rzeczy.</em></h2>
+            <h2>Do domu i ogrodu —<br /><em>rzeczy, które naprawdę się przydają.</em></h2>
             <p>
               Nest & Yard porządkuje ofertę i pokazuje produkty, które łatwo połączyć w jedną estetyczną całość. Bez przeładowania, bez przypadkowych wyborów.
             </p>
