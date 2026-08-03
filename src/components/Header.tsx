@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { BagIcon } from "@/components/Icons";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -12,8 +13,7 @@ export function Header() {
       <div className="announcement">Wybrane rzeczy do domu i ogrodu · bezpieczny zakup na Allegro</div>
       <header className="site-header">
         <Link className="brand" href="/" aria-label="Nest & Yard — strona główna">
-          <span className="brand-mark">N&Y</span>
-          <span className="brand-name">Nest <em>&</em> Yard</span>
+          <BrandLogo placement="header" />
         </Link>
         <button className="menu-button" type="button" onClick={() => setOpen((value) => !value)} aria-expanded={open}>
           Menu
