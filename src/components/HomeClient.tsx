@@ -5,7 +5,6 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { ArrowIcon, LeafIcon, PawIcon } from "@/components/Icons";
 import { ProductCard } from "@/components/ProductCard";
-import { ProductVisual } from "@/components/ProductVisual";
 import { useProducts } from "@/components/ProductProvider";
 
 const categories = [
@@ -43,7 +42,6 @@ export function HomeClient() {
   const { products, ready } = useProducts();
   const visibleProducts = products.filter((product) => product.published);
   const featured = visibleProducts.filter((product) => product.featured).slice(0, 4);
-  const heroProduct = featured[0] ?? visibleProducts[0];
 
   return (
     <>
@@ -66,13 +64,15 @@ export function HomeClient() {
             </div>
           </div>
 
-          <div className="hero-art" aria-label="Wyróżniony produkt Nest & Yard">
-            <div className="hero-art-label">Nest & Yard<br />selection</div>
-            <span className="hero-dot hero-dot-one" />
-            <span className="hero-dot hero-dot-two" />
-            {heroProduct ? <ProductVisual product={heroProduct} className="hero-product-visual" /> : null}
-            <div className="hero-stamp"><LeafIcon /><span>curated<br />outdoor living</span></div>
-            <div className="hero-note">Naturalne odcienie<br />· miękkie linie ·</div>
+          <div className="hero-art hero-art-photo" aria-label="Przytulny taras z pergolą i psem w legowisku">
+            <img
+              className="hero-lifestyle-image"
+              src="/nest-yard-hero.svg"
+              alt="Przytulny taras pod pergolą, z oświetleniem, meblami ogrodowymi i psem odpoczywającym w legowisku"
+            />
+            <div className="hero-art-label hero-photo-label">Nest & Yard<br />outdoor living</div>
+            <div className="hero-stamp hero-photo-stamp"><LeafIcon /><span>dom · ogród<br />· zwierzęta ·</span></div>
+            <div className="hero-note hero-photo-note">Ciepło domu<br />także na zewnątrz</div>
           </div>
         </section>
 
