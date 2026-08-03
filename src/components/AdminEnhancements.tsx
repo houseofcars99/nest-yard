@@ -46,7 +46,7 @@ body { font-family: Arial, Helvetica, sans-serif; font-size: 10pt; -webkit-print
 .invoice-total { font-size: 12pt; border-top: 2px solid #1d2e29; padding-top: 9px; }
 .invoice-document footer { margin-top: 32px; padding-top: 10px; border-top: 1px solid #d8dedb; font-size: 7.5pt; color: #68766f; }
 @media print {
-  html, body { width: 210mm; }
+  html, body { width: auto; }
   .invoice-document { break-after: avoid; }
 }
 `;
