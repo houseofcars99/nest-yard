@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { LeafIcon } from "@/components/Icons";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export function Footer() {
   return (
@@ -10,7 +11,7 @@ export function Footer() {
       </div>
       <div className="footer-grid">
         <div>
-          <div className="footer-brand">Nest <em>&</em> Yard</div>
+          <BrandLogo placement="footer" />
           <p className="muted">Katalog inspiracji z bezpośrednimi linkami do aktualnych ofert Allegro.</p>
         </div>
         <div>
