@@ -40,4 +40,4 @@ jobs:
           git commit -m "Complete Nest & Yard application"
           git push origin main
 
-# Retriggered after source package upload completed.
+# Final retrigger after all direct source commits completed.
