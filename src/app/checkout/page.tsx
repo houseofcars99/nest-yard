@@ -28,7 +28,6 @@ export default function CheckoutPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [accepted, setAccepted] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -39,6 +38,9 @@ export default function CheckoutPage() {
       if (saved) setItems(JSON.parse(saved));
     } catch {
       setItems([]);
+    }
+    if (new URLSearchParams(window.location.search).get("payment") === "cancelled") {
+      setError("Płatność została anulowana. Twoje zamówienie nadal oczekuje na płatność.");
     }
   }, []);
 
@@ -68,29 +70,22 @@ export default function CheckoutPage() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Nie udało się utworzyć zamówienia.");
       setOrderNumber(data.orderNumber);
-      setSubmitted(true);
+
+      const paymentResponse = await fetch("/api/payments/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderNumber: data.orderNumber }),
+      });
+      const paymentData = await paymentResponse.json();
+      if (!paymentResponse.ok || !paymentData.url) throw new Error(paymentData.error || "Nie udało się uruchomić płatności.");
+
       localStorage.removeItem("vignettego-cart");
+      window.location.href = paymentData.url;
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Nie udało się utworzyć zamówienia.");
+      setError(err instanceof Error ? err.message : "Nie udało się uruchomić płatności.");
     } finally {
       setLoading(false);
     }
-  }
-
-  if (submitted) {
-    return (
-      <main className="vignette-page checkout-page">
-        <nav className="topbar"><Link href="/" className="brand">VIGNETTE<span>GO</span></Link></nav>
-        <section className="checkout-success">
-          <span className="success-mark">✓</span>
-          <p className="eyebrow">ZAMÓWIENIE UTWORZONE</p>
-          <h1>Jesteśmy gotowi.</h1>
-          <p>Numer zamówienia: <strong>{orderNumber}</strong></p>
-          <p>Twoje zamówienie zostało zapisane. Następnym krokiem będzie bezpieczna płatność, a następnie automatyczna realizacja winiety.</p>
-          <Link href="/" className="primary-button link-button">Wróć do zakupów</Link>
-        </section>
-      </main>
-    );
   }
 
   return (
@@ -105,9 +100,10 @@ export default function CheckoutPage() {
             <div className="field-row"><label><span>Imię</span><input required value={firstName} onChange={(e) => setFirstName(e.target.value)} /></label><label><span>Nazwisko</span><input required value={lastName} onChange={(e) => setLastName(e.target.value)} /></label></div>
             <label className="full-field"><span>E-mail</span><input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="twoj@email.pl" /></label>
             <label className="consent"><input type="checkbox" checked={accepted} onChange={(e) => setAccepted(e.target.checked)} /><span>Akceptuję regulamin i politykę prywatności oraz wyrażam zgodę na realizację zamówienia na podany adres e-mail.</span></label>
+            {orderNumber && !loading && <p className="price-note">Numer zamówienia: <strong>{orderNumber}</strong></p>}
             {error && <p role="alert" className="form-error">{error}</p>}
-            <button className="primary-button checkout-submit" type="submit" disabled={loading}>{loading ? "Tworzymy zamówienie…" : "Przejdź do płatności →"}</button>
-            <p className="price-note">Na tym etapie nie pobieramy jeszcze płatności.</p>
+            <button className="primary-button checkout-submit" type="submit" disabled={loading}>{loading ? "Przygotowujemy bezpieczną płatność…" : "Zapłać bezpiecznie →"}</button>
+            <p className="price-note">Po kliknięciu nastąpi bezpieczne przekierowanie do operatora płatności.</p>
           </form>
         </div>
         <aside className="order-summary">
