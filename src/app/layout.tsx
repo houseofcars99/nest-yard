@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
-import { ProductProvider } from "@/components/ProductProvider";
 
 export const metadata: Metadata = {
   title: "VignetteGO — Winiety na podróż po Europie",
@@ -13,9 +12,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="pl">
-      <body>
-        <ProductProvider>{children}</ProductProvider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
