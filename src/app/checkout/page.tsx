@@ -12,6 +12,7 @@ type CartItem = {
   validity: string;
   registrationNumber: string;
   registrationCountry: string;
+  fuelType?: string;
   startDate?: string;
   price: number;
   currency: string;
@@ -28,6 +29,9 @@ export default function CheckoutPage() {
   const [lastName, setLastName] = useState("");
   const [accepted, setAccepted] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [orderNumber, setOrderNumber] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     try {
@@ -50,10 +54,27 @@ export default function CheckoutPage() {
     localStorage.setItem("vignettego-cart", JSON.stringify(next));
   }
 
-  function submitOrder(event: React.FormEvent) {
+  async function submitOrder(event: React.FormEvent) {
     event.preventDefault();
+    setError("");
     if (!items.length || !email || !firstName || !lastName || !accepted) return;
-    setSubmitted(true);
+    setLoading(true);
+    try {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ firstName, lastName, email, acceptedTerms: accepted, items }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Nie udało się utworzyć zamówienia.");
+      setOrderNumber(data.orderNumber);
+      setSubmitted(true);
+      localStorage.removeItem("vignettego-cart");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Nie udało się utworzyć zamówienia.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (submitted) {
@@ -62,9 +83,10 @@ export default function CheckoutPage() {
         <nav className="topbar"><Link href="/" className="brand">VIGNETTE<span>GO</span></Link></nav>
         <section className="checkout-success">
           <span className="success-mark">✓</span>
-          <p className="eyebrow">ZAMÓWIENIE PRZYGOTOWANE</p>
-          <h1>Jeszcze jeden krok.</h1>
-          <p>Twoje dane zostały zebrane. W następnym etapie podłączymy bezpieczną płatność i automatyczną realizację winiety.</p>
+          <p className="eyebrow">ZAMÓWIENIE UTWORZONE</p>
+          <h1>Jesteśmy gotowi.</h1>
+          <p>Numer zamówienia: <strong>{orderNumber}</strong></p>
+          <p>Twoje zamówienie zostało zapisane. Następnym krokiem będzie bezpieczna płatność, a następnie automatyczna realizacja winiety.</p>
           <Link href="/" className="primary-button link-button">Wróć do zakupów</Link>
         </section>
       </main>
@@ -83,7 +105,8 @@ export default function CheckoutPage() {
             <div className="field-row"><label><span>Imię</span><input required value={firstName} onChange={(e) => setFirstName(e.target.value)} /></label><label><span>Nazwisko</span><input required value={lastName} onChange={(e) => setLastName(e.target.value)} /></label></div>
             <label className="full-field"><span>E-mail</span><input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="twoj@email.pl" /></label>
             <label className="consent"><input type="checkbox" checked={accepted} onChange={(e) => setAccepted(e.target.checked)} /><span>Akceptuję regulamin i politykę prywatności oraz wyrażam zgodę na realizację zamówienia na podany adres e-mail.</span></label>
-            <button className="primary-button checkout-submit" type="submit">Przejdź do płatności →</button>
+            {error && <p role="alert" className="form-error">{error}</p>}
+            <button className="primary-button checkout-submit" type="submit" disabled={loading}>{loading ? "Tworzymy zamówienie…" : "Przejdź do płatności →"}</button>
             <p className="price-note">Na tym etapie nie pobieramy jeszcze płatności.</p>
           </form>
         </div>
