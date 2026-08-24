@@ -10,8 +10,8 @@ create table if not exists public.vignette_orders (
   customer_email text not null,
   status text not null default 'pending' check (status in ('pending','paid','processing','completed','failed','cancelled')),
   payment_status text not null default 'unpaid' check (payment_status in ('unpaid','pending','paid','refunded','failed')),
-  total_amount numeric(12,2) not null,
-  currency text not null,
+  total_amount numeric(12,2),
+  currency text not null default 'MULTI',
   accepted_terms_at timestamptz not null,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -45,7 +45,6 @@ create index if not exists vignette_order_items_fulfilment_idx on public.vignett
 alter table public.vignette_orders enable row level security;
 alter table public.vignette_order_items enable row level security;
 
--- No anonymous browser writes. Orders are created by trusted server-side code.
 revoke all on table public.vignette_orders from anon, authenticated;
 revoke all on table public.vignette_order_items from anon, authenticated;
 
@@ -70,5 +69,5 @@ using (
   )
 );
 
--- The service/secret key is intentionally required for server-side order creation.
--- Never expose it in browser code. Supabase documents that secret/service_role keys bypass RLS.
+-- Order creation is performed by a trusted server-side route using
+-- SUPABASE_SECRET_KEY. Never expose that key to browser code.
