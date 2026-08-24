@@ -31,9 +31,9 @@ export async function POST(request: Request) {
     const { firstName, lastName, email, acceptedTerms, items } = body as { firstName?: string; lastName?: string; email?: string; acceptedTerms?: boolean; items?: CartItem[] };
     if (!firstName?.trim() || !lastName?.trim() || !validEmail(email) || acceptedTerms !== true) return NextResponse.json({ error: "Uzupełnij dane klienta i zaakceptuj regulamin." }, { status: 400 });
     if (!Array.isArray(items) || items.length < 1 || items.length > 20) return NextResponse.json({ error: "Koszyk jest pusty lub zawiera zbyt wiele pozycji." }, { status: 400 });
+    const customerEmail = email.trim().toLowerCase();
 
     const serverItems = items.map((item) => {
-      // The browser adds a timestamp suffix to keep cart entries unique.
       const productId = item.id.replace(/-\d+$/, "");
       const product = PRODUCTS[productId as keyof typeof PRODUCTS];
       if (!product) throw new Error("Nieznany produkt w koszyku.");
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
     const currencies = [...new Set(serverItems.map((item) => item.product.currency))];
     const totalByCurrency = Object.fromEntries(currencies.map((currency) => [currency, Math.round(serverItems.filter((item) => item.product.currency === currency).reduce((sum, item) => sum + item.finalPrice, 0) * 100) / 100]));
     const orderNumber = `VG-${new Date().toISOString().slice(0, 10).replaceAll("-", "")}-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
-    const orderPayload = { order_number: orderNumber, customer_first_name: firstName.trim(), customer_last_name: lastName.trim(), customer_email: email.trim().toLowerCase(), status: "pending", payment_status: "unpaid", total_amount: currencies.length === 1 ? totalByCurrency[currencies[0]] : null, currency: currencies.length === 1 ? currencies[0] : "MULTI", accepted_terms_at: new Date().toISOString() };
+    const orderPayload = { order_number: orderNumber, customer_first_name: firstName.trim(), customer_last_name: lastName.trim(), customer_email: customerEmail, status: "pending", payment_status: "unpaid", total_amount: currencies.length === 1 ? totalByCurrency[currencies[0]] : null, currency: currencies.length === 1 ? currencies[0] : "MULTI", accepted_terms_at: new Date().toISOString() };
 
     const headers = { apikey: SUPABASE_SECRET_KEY, Authorization: `Bearer ${SUPABASE_SECRET_KEY}`, "Content-Type": "application/json" };
     const orderResponse = await fetch(`${SUPABASE_URL}/rest/v1/vignette_orders`, { method: "POST", headers: { ...headers, Prefer: "return=representation" }, body: JSON.stringify(orderPayload) });
