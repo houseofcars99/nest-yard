@@ -1,4 +1,5 @@
 -- Fulfilment batches and deterministic customer delivery matching.
+-- Migration versions are unique and strictly ordered.
 create table if not exists public.vignette_fulfilment_batches (
   id uuid primary key default gen_random_uuid(),
   country_code text not null,
