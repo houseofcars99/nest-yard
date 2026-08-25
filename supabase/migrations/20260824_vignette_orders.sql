@@ -51,6 +51,11 @@ revoke all on table public.vignette_order_items from anon, authenticated;
 grant select on public.vignette_orders to authenticated;
 grant select on public.vignette_order_items to authenticated;
 
+-- The schema may already have been created during manual testing.
+-- Drop/recreate these policies so this migration is safe to rerun after a partial deployment.
+drop policy if exists "customers can read their own orders" on public.vignette_orders;
+drop policy if exists "customers can read their own order items" on public.vignette_order_items;
+
 create policy "customers can read their own orders"
 on public.vignette_orders
 for select
