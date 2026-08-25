@@ -22,9 +22,16 @@ function money(value: number, currency: string) {
   return new Intl.NumberFormat("pl-PL", { style: "currency", currency }).format(value);
 }
 
+function todayDate() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 export default function CheckoutPage() {
   const [items, setItems] = useState<CartItem[]>([]);
   const [email, setEmail] = useState("");
+  const [emailConfirmation, setEmailConfirmation] = useState("");
+  const [registrationConfirmations, setRegistrationConfirmations] = useState<Record<string, string>>({});
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [accepted, setAccepted] = useState(false);
@@ -35,7 +42,11 @@ export default function CheckoutPage() {
   useEffect(() => {
     try {
       const saved = localStorage.getItem("vignettego-cart");
-      if (saved) setItems(JSON.parse(saved));
+      if (saved) {
+        const parsed = JSON.parse(saved) as CartItem[];
+        setItems(parsed);
+        setRegistrationConfirmations(Object.fromEntries(parsed.map((item) => [item.id, ""])));
+      }
     } catch {
       setItems([]);
     }
@@ -53,19 +64,35 @@ export default function CheckoutPage() {
   function remove(id: string) {
     const next = items.filter((item) => item.id !== id);
     setItems(next);
+    setRegistrationConfirmations((current) => {
+      const copy = { ...current };
+      delete copy[id];
+      return copy;
+    });
     localStorage.setItem("vignettego-cart", JSON.stringify(next));
+  }
+
+  function updateRegistrationConfirmation(id: string, value: string) {
+    setRegistrationConfirmations((current) => ({ ...current, [id]: value }));
   }
 
   async function submitOrder(event: React.FormEvent) {
     event.preventDefault();
     setError("");
-    if (!items.length || !email || !firstName || !lastName || !accepted) return;
+    const emailOk = email.trim().toLowerCase() === emailConfirmation.trim().toLowerCase() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+    const registrationsOk = items.every((item) => item.registrationNumber.trim().toUpperCase().replace(/[\s-]+/g, "") === (registrationConfirmations[item.id] ?? "").trim().toUpperCase().replace(/[\s-]+/g, ""));
+    const datesOk = items.every((item) => item.country === "CH" || Boolean(item.startDate && item.startDate >= todayDate()));
+    if (!items.length || !emailOk || !firstName || !lastName || !accepted || !registrationsOk || !datesOk) {
+      setError("Sprawdź e-mail, powtórzone numery rejestracyjne, daty rozpoczęcia winiet i wymagane zgody.");
+      return;
+    }
     setLoading(true);
     try {
+      const checkoutItems = items.map((item) => ({ ...item, registrationNumberConfirmation: registrationConfirmations[item.id] ?? "" }));
       const response = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firstName, lastName, email, acceptedTerms: accepted, items }),
+        body: JSON.stringify({ firstName, lastName, email, emailConfirmation, acceptedTerms: accepted, items: checkoutItems }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Nie udało się utworzyć zamówienia.");
@@ -99,6 +126,19 @@ export default function CheckoutPage() {
           <form onSubmit={submitOrder} className="checkout-form">
             <div className="field-row"><label><span>Imię</span><input required value={firstName} onChange={(e) => setFirstName(e.target.value)} /></label><label><span>Nazwisko</span><input required value={lastName} onChange={(e) => setLastName(e.target.value)} /></label></div>
             <label className="full-field"><span>E-mail</span><input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="twoj@email.pl" /></label>
+            <label className="full-field"><span>Powtórz e-mail</span><input required type="email" value={emailConfirmation} onChange={(e) => setEmailConfirmation(e.target.value)} placeholder="powtórz adres e-mail" autoComplete="off" /></label>
+
+            {items.map((item) => (
+              <div key={item.id} className="full-field">
+                <span>{item.flag} {item.country} · Numer rejestracyjny</span>
+                <input value={item.registrationNumber} readOnly aria-label={`Numer rejestracyjny ${item.country}`} />
+                <input required value={registrationConfirmations[item.id] ?? ""} onChange={(e) => updateRegistrationConfirmation(item.id, e.target.value)} placeholder="Powtórz numer rejestracyjny" autoComplete="off" />
+                {item.country !== "CH" && (
+                  <small>Data rozpoczęcia: {item.startDate ? new Date(item.startDate + "T00:00:00").toLocaleDateString("pl-PL") : "brak"}. Data nie może być wcześniejsza niż dzisiaj.</small>
+                )}
+              </div>
+            ))}
+
             <label className="consent"><input type="checkbox" checked={accepted} onChange={(e) => setAccepted(e.target.checked)} /><span>Akceptuję regulamin i politykę prywatności oraz wyrażam zgodę na realizację zamówienia na podany adres e-mail.</span></label>
             {orderNumber && !loading && <p className="price-note">Numer zamówienia: <strong>{orderNumber}</strong></p>}
             {error && <p role="alert" className="form-error">{error}</p>}
