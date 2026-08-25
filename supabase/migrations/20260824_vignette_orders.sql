@@ -52,27 +52,57 @@ grant select on public.vignette_orders to authenticated;
 grant select on public.vignette_order_items to authenticated;
 
 -- The schema may already have been created during manual testing.
--- Drop/recreate these policies so this migration is safe to rerun after a partial deployment.
-drop policy if exists "customers can read their own orders" on public.vignette_orders;
-drop policy if exists "customers can read their own order items" on public.vignette_order_items;
+-- Make policy creation idempotent without relying on DROP POLICY during a partial migration.
+do $$
+begin
+  if exists (
+    select 1 from pg_policies
+    where schemaname = 'public'
+      and tablename = 'vignette_orders'
+      and policyname = 'customers can read their own orders'
+  ) then
+    alter policy "customers can read their own orders"
+      on public.vignette_orders
+      to authenticated
+      using ((select auth.jwt()->>'email') = customer_email);
+  else
+    create policy "customers can read their own orders"
+      on public.vignette_orders
+      for select
+      to authenticated
+      using ((select auth.jwt()->>'email') = customer_email);
+  end if;
 
-create policy "customers can read their own orders"
-on public.vignette_orders
-for select
-to authenticated
-using ((select auth.jwt()->>'email') = customer_email);
-
-create policy "customers can read their own order items"
-on public.vignette_order_items
-for select
-to authenticated
-using (
-  exists (
-    select 1 from public.vignette_orders o
-    where o.id = order_id
-      and (select auth.jwt()->>'email') = o.customer_email
-  )
-);
+  if exists (
+    select 1 from pg_policies
+    where schemaname = 'public'
+      and tablename = 'vignette_order_items'
+      and policyname = 'customers can read their own order items'
+  ) then
+    alter policy "customers can read their own order items"
+      on public.vignette_order_items
+      to authenticated
+      using (
+        exists (
+          select 1 from public.vignette_orders o
+          where o.id = order_id
+            and (select auth.jwt()->>'email') = o.customer_email
+        )
+      );
+  else
+    create policy "customers can read their own order items"
+      on public.vignette_order_items
+      for select
+      to authenticated
+      using (
+        exists (
+          select 1 from public.vignette_orders o
+          where o.id = order_id
+            and (select auth.jwt()->>'email') = o.customer_email
+        )
+      );
+  end if;
+end $$;
 
 -- Order creation is performed by a trusted server-side route using
 -- SUPABASE_SECRET_KEY. Never expose that key to browser code.
