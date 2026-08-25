@@ -1,0 +1,10 @@
+project_id = "cuyzbzunrcodmbsfctja"
+
+[functions.process-cz-confirmation]
+verify_jwt = true
+
+[functions.process-cz-confirmation-zip]
+verify_jwt = true
+
+[functions.send-vignette-email]
+verify_jwt = true
