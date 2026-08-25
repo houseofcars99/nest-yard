@@ -1,3 +1,4 @@
+-- Fulfilment batches and deterministic customer delivery matching.
 create table if not exists public.vignette_fulfilment_batches (
   id uuid primary key default gen_random_uuid(),
   country_code text not null,
