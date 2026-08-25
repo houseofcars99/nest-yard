@@ -27,9 +27,9 @@ jobs:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       - name: Deploy Edge Functions
         run: |
-          supabase functions deploy process-cz-confirmation --no-verify-jwt
-          supabase functions deploy process-cz-confirmation-zip --no-verify-jwt
-          supabase functions deploy send-vignette-email --no-verify-jwt
-          supabase functions deploy health-cz-fulfilment --no-verify-jwt
+          supabase functions deploy process-cz-confirmation
+          supabase functions deploy process-cz-confirmation-zip
+          supabase functions deploy send-vignette-email
+          supabase functions deploy health-cz-fulfilment
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
