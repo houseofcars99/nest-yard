@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import "./hero-lifestyle.css";
 import { finalPrice, vignetteProducts, type CountryCode } from "@/data/vignettes";
+import { BrandLogo } from "@/components/BrandLogo";
 
 type CountryInfo = {
   code: CountryCode;
@@ -66,6 +67,7 @@ export default function HomePage() {
     setCountryCode(next);
     setVehicle("car");
     setValidity(next === "CH" ? "roczna" : "10 dni");
+    setStartDate("");
     setError("");
   }
 
@@ -114,7 +116,9 @@ export default function HomePage() {
   return (
     <main className="vignette-page">
       <nav className="topbar">
-        <div className="brand">TOLLA</div>
+        <Link className="brand" href="/" aria-label="TOLLA — strona główna">
+          <BrandLogo placement="header" />
+        </Link>
         <button className="cart-button" type="button" onClick={() => setShowCart(true)}>Koszyk <strong>{cart.length}</strong></button>
       </nav>
 
@@ -126,14 +130,19 @@ export default function HomePage() {
               {cart.map((item) => { const itemCountry = countries[item.countryCode]; return <div className="cart-item" key={item.id}><div><strong>{itemCountry.flag} {itemCountry.name}</strong><span>{item.product} · {item.validity}</span><span>{item.registrationCountry} · {item.registrationNumber}</span></div><div><b>{money(item.finalPrice, item.currency)}</b><button onClick={() => removeFromCart(item.id)}>Usuń</button></div></div>; })}
               <div className="cart-total"><span>Łącznie</span><div>{currencies.map((currency) => <strong key={currency}>{money(cart.filter((item) => item.currency === currency).reduce((sum, item) => sum + item.finalPrice, 0), currency)}</strong>)}</div></div>
               <Link className="primary-button checkout-button link-button" href="/checkout">Przejdź do płatności →</Link>
-              <p className="price-note">Cena końcowa. Bez rozbijania ceny na dodatkowe składniki.</p>
+              <p className="price-note">Cena końcowa. Wszystkie opłaty za realizację są uwzględnione.</p>
             </>}
           </aside>
         </div>
       )}
 
-      <section className="hero">
-        <div className="hero-copy"><p className="eyebrow">EUROPEAN ROAD FEES</p><h1>Jedź dalej.<br /><em>My zajmiemy się winietą.</em></h1><p className="hero-text">Kup elektroniczną winietę na podróż po Europie. Prosto, szybko i bez zbędnych kroków.</p></div>
+      <section className="hero" id="winiety">
+        <div className="hero-copy">
+          <p className="eyebrow">EUROPEAN ROAD FEES</p>
+          <h1>Jedź dalej.<br /><em>My zajmiemy się winietą.</em></h1>
+          <p className="hero-text">Kup elektroniczną winietę na podróż po Europie. Prosto, szybko i bez zbędnych kroków.</p>
+        </div>
+
         <div className="purchase-card">
           <div className="country-heading"><div><span className="label">KRAJ</span><h2>{selectedCountry.flag} {selectedCountry.name}</h2></div><span className="product-type">{selectedCountry.description}</span></div>
           <div className="country-grid">{countryCodes.map((code) => { const info = countries[code]; return <button key={code} type="button" className={countryCode === code ? "country active" : "country"} onClick={() => changeCountry(code)}><span>{info.flag}</span><b>{info.name}</b></button>; })}</div>
@@ -148,7 +157,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="benefits"><div><b>01</b><h3>Jedna strona</h3><p>Wybierz kraj i uzupełnij tylko dane wymagane do rejestracji.</p></div><div><b>02</b><h3>Jedna płatność</h3><p>Możesz dodać winiety z kilku krajów do jednego koszyka.</p></div><div><b>03</b><h3>Cyfrowe potwierdzenie</h3><p>Po realizacji otrzymasz potwierdzenie na swój adres e-mail.</p></div></section>
+      <section className="benefits" id="jak-to-dziala">
+        <div><b>01</b><h3>Jedna strona</h3><p>Wybierz kraj i uzupełnij tylko dane wymagane do rejestracji.</p></div>
+        <div><b>02</b><h3>Jedna płatność</h3><p>Możesz dodać winiety z kilku krajów do jednego koszyka.</p></div>
+        <div><b>03</b><h3>Cyfrowe potwierdzenie</h3><p>Po realizacji otrzymasz potwierdzenie na swój adres e-mail.</p></div>
+      </section>
     </main>
   );
 }
