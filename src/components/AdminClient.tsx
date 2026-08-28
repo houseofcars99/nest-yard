@@ -8,7 +8,7 @@ import { AdminOperations } from "@/components/AdminOperations";
 import { useProducts } from "@/components/ProductProvider";
 import type { Product, ProductDraft, ProductPalette } from "@/lib/types";
 
-const SESSION_KEY = "nest-and-yard-admin-session";
+const SESSION_KEY = "tolla-admin-session";
 const DEMO_PASSWORD = "nest-demo";
 
 const categoryOptions = [
@@ -200,7 +200,7 @@ export function AdminClient() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `nest-and-yard-products-${new Date().toISOString().slice(0, 10)}.json`;
+    link.download = `tolla-products-${new Date().toISOString().slice(0, 10)}.json`;
     link.click();
     URL.revokeObjectURL(url);
     setNotice("Kopia produktów została pobrana.");
@@ -226,7 +226,7 @@ export function AdminClient() {
     return (
       <main className="admin-login-page">
         <div className="admin-login-card">
-          <Link className="admin-brand" href="/"><span>N&Y</span>Nest <em>&</em> Yard</Link>
+          <Link className="admin-brand" href="/"><span>TOLLA</span>Nest <em>&</em> Yard</Link>
           <p className="eyebrow">Panel administratora</p>
           <h1>Zarządzaj katalogiem.</h1>
           <p>Wersja demonstracyjna. Dane są zapisywane lokalnie w tej przeglądarce.</p>
@@ -245,7 +245,7 @@ export function AdminClient() {
   return (
     <main className="admin-page">
       <aside className="admin-sidebar">
-        <Link className="admin-brand admin-brand-light" href="/"><span>N&Y</span>Nest <em>&</em> Yard</Link>
+        <Link className="admin-brand admin-brand-light" href="/"><span>TOLLA</span>Nest <em>&</em> Yard</Link>
         <nav>
           <a className="active" href="#dashboard">Przegląd</a>
           <a href="#operations">Sprzedaż i Allegro</a>
@@ -260,7 +260,7 @@ export function AdminClient() {
 
       <div className="admin-main">
         <header className="admin-header" id="dashboard">
-          <div><p className="eyebrow">Tryb demonstracyjny</p><h1>Dzień dobry.</h1><p>Zarządzaj tym, co klienci zobaczą w katalogu Nest & Yard.</p></div>
+          <div><p className="eyebrow">Tryb demonstracyjny</p><h1>Dzień dobry.</h1><p>Zarządzaj tym, co klienci zobaczą w katalogu TOLLA.</p></div>
           <button className="button button-dark" type="button" onClick={openNew}>+ Dodaj produkt</button>
         </header>
 
@@ -300,7 +300,7 @@ export function AdminClient() {
       {formOpen ? (
         <div className="admin-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setFormOpen(false); }}>
           <section className="admin-modal" role="dialog" aria-modal="true" aria-labelledby="product-form-title">
-            <div className="admin-modal-header"><div><p className="eyebrow">Katalog Nest & Yard</p><h2 id="product-form-title">{editingId ? "Edytuj produkt" : "Nowy produkt"}</h2></div><button type="button" onClick={() => setFormOpen(false)} aria-label="Zamknij">×</button></div>
+            <div className="admin-modal-header"><div><p className="eyebrow">Katalog TOLLA</p><h2 id="product-form-title">{editingId ? "Edytuj produkt" : "Nowy produkt"}</h2></div><button type="button" onClick={() => setFormOpen(false)} aria-label="Zamknij">×</button></div>
             <form className="product-form" onSubmit={saveProduct}>
               <div className="form-grid">
                 <label className="field-wide">Nazwa produktu<input value={draft.name} onChange={(event) => { setField("name", event.target.value); if (!editingId) setField("slug", slugify(event.target.value)); }} placeholder="np. Fotel ogrodowy Haven" /></label>
