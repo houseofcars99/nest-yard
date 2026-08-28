@@ -32,7 +32,7 @@ export function ProductDetailClient({ slug }: { slug: string }) {
 
   if (!product) {
     return (
-      <><Header /><main className="not-found-page"><p className="eyebrow">Nest & Yard</p><h1>Nie znaleźliśmy tego produktu.</h1><Link className="button button-dark" href="/">Wróć do kolekcji</Link></main><Footer /></>
+      <><Header /><main className="not-found-page"><p className="eyebrow">TOLLA</p><h1>Nie znaleźliśmy tego produktu.</h1><Link className="button button-dark" href="/">Wróć do kolekcji</Link></main><Footer /></>
     );
   }
 
@@ -48,7 +48,7 @@ export function ProductDetailClient({ slug }: { slug: string }) {
           <div className="product-detail-visual">
             {product.badge ? <span className="product-badge large-badge">{product.badge}</span> : null}
             <ProductVisual product={product} />
-            <div className="visual-caption"><LeafIcon /><span>Wybrane przez Nest & Yard</span></div>
+            <div className="visual-caption"><LeafIcon /><span>Wybrane przez TOLLA</span></div>
           </div>
           <div className="product-detail-copy">
             <p className="eyebrow">{product.category}</p>
