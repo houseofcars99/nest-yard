@@ -98,7 +98,7 @@ export default function HomePage() {
 
     const next = [...cart, item];
     setCart(next);
-    localStorage.setItem("vignettego-cart", JSON.stringify(next));
+    localStorage.setItem("tolla-cart", JSON.stringify(next));
     setError("");
     setShowCart(true);
   }
@@ -106,7 +106,7 @@ export default function HomePage() {
   function removeFromCart(id: string) {
     const next = cart.filter((item) => item.id !== id);
     setCart(next);
-    localStorage.setItem("vignettego-cart", JSON.stringify(next));
+    localStorage.setItem("tolla-cart", JSON.stringify(next));
   }
 
   const currencies = [...new Set(cart.map((item) => item.currency))];
@@ -114,7 +114,7 @@ export default function HomePage() {
   return (
     <main className="vignette-page">
       <nav className="topbar">
-        <div className="brand">VIGNETTE<span>GO</span></div>
+        <div className="brand">TOLLA</div>
         <button className="cart-button" type="button" onClick={() => setShowCart(true)}>Koszyk <strong>{cart.length}</strong></button>
       </nav>
 
