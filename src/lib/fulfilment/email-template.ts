@@ -10,7 +10,7 @@ export type VignetteEmailData = {
 };
 
 export function buildVignetteDeliveryEmail(data: VignetteEmailData) {
-  const subject = `VignetteGO – potwierdzenie zakupu winiety – ${data.orderNumber}`;
+  const subject = `TOLLA – potwierdzenie zakupu winiety – ${data.orderNumber}`;
 
   const text = [
     `Dzień dobry ${data.customerFirstName},`,
@@ -25,7 +25,7 @@ export function buildVignetteDeliveryEmail(data: VignetteEmailData) {
     `Potwierdzenie zakupu: ${data.downloadUrl}`,
     '',
     'Pozdrawiamy,',
-    'Zespół VignetteGO',
+    'Zespół TOLLA',
   ].filter(Boolean).join('\n');
 
   return { subject, text };
