@@ -41,7 +41,7 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("vignettego-cart");
+      const saved = localStorage.getItem("tolla-cart");
       if (saved) {
         const parsed = JSON.parse(saved) as CartItem[];
         setItems(parsed);
@@ -69,7 +69,7 @@ export default function CheckoutPage() {
       delete copy[id];
       return copy;
     });
-    localStorage.setItem("vignettego-cart", JSON.stringify(next));
+    localStorage.setItem("tolla-cart", JSON.stringify(next));
   }
 
   function updateRegistrationConfirmation(id: string, value: string) {
@@ -106,7 +106,7 @@ export default function CheckoutPage() {
       const paymentData = await paymentResponse.json();
       if (!paymentResponse.ok || !paymentData.url) throw new Error(paymentData.error || "Nie udało się uruchomić płatności.");
 
-      localStorage.removeItem("vignettego-cart");
+      localStorage.removeItem("tolla-cart");
       window.location.href = paymentData.url;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Nie udało się uruchomić płatności.");
@@ -117,7 +117,7 @@ export default function CheckoutPage() {
 
   return (
     <main className="vignette-page checkout-page">
-      <nav className="topbar"><Link href="/" className="brand">VIGNETTE<span>GO</span></Link><span className="checkout-step">CHECKOUT · 01 / 02</span></nav>
+      <nav className="topbar"><Link href="/" className="brand">TOLLA</Link><span className="checkout-step">CHECKOUT · 01 / 02</span></nav>
       <section className="checkout-layout">
         <div>
           <Link href="/" className="back-link">← Wróć do wyboru winiety</Link>
