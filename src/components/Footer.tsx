@@ -7,30 +7,30 @@ export function Footer() {
     <footer className="site-footer">
       <div className="footer-lead">
         <LeafIcon />
-        <p>Rzeczy, które dobrze wyglądają i dobrze służą — w domu, ogrodzie i codziennym życiu ze zwierzętami.</p>
+        <p>Winiety i opłaty drogowe w Europie — prosto, szybko i w jednym miejscu.</p>
       </div>
       <div className="footer-grid">
         <div>
           <BrandLogo placement="footer" />
-          <p className="muted">Katalog inspiracji z bezpośrednimi linkami do aktualnych ofert Allegro.</p>
+          <p className="muted">Jedno miejsce do obsługi europejskich opłat drogowych.</p>
         </div>
         <div>
-          <strong>Kolekcje</strong>
-          <Link href="/kategoria/meble-ogrodowe">Meble ogrodowe</Link>
-          <Link href="/kategoria/pergole-i-zadaszenia">Pergole</Link>
-          <Link href="/kategoria/donice-i-dekoracje">Donice i dekoracje</Link>
-          <Link href="/kategoria/dla-zwierzat">Dla zwierząt</Link>
+          <strong>Oferta</strong>
+          <Link href="/kategoria/meble-ogrodowe">Winiety</Link>
+          <Link href="/kategoria/pergole-i-zadaszenia">Opłaty drogowe</Link>
+          <Link href="/kategoria/donice-i-dekoracje">Road passes</Link>
+          <Link href="/kategoria/dla-zwierzat">Pomoc</Link>
         </div>
         <div>
           <strong>Informacje</strong>
-          <Link href="/#jak-to-dziala">Jak kupować</Link>
+          <Link href="/#jak-to-dziala">Jak to działa</Link>
           <Link href="/admin">Panel administratora</Link>
-          <span>Sprzedaż realizowana na Allegro</span>
+          <span>Realizacja zamówień online</span>
         </div>
       </div>
       <div className="footer-bottom">
-        <span>© 2026 Nest & Yard</span>
-        <span>Testowa wersja katalogu</span>
+        <span>© 2026 TOLLA</span>
+        <span>Wersja testowa</span>
       </div>
     </footer>
   );
