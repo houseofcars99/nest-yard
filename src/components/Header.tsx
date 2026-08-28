@@ -10,22 +10,22 @@ export function Header() {
 
   return (
     <>
-      <div className="announcement">Europejskie opłaty drogowe · winiety i road passes</div>
+      <div className="announcement">Europejskie opłaty drogowe · winiety w jednym miejscu</div>
       <header className="site-header">
         <Link className="brand" href="/" aria-label="TOLLA — strona główna">
           <BrandLogo placement="header" />
         </Link>
+
         <button className="menu-button" type="button" onClick={() => setOpen((value) => !value)} aria-expanded={open}>
           Menu
         </button>
-        <nav className={open ? "main-nav is-open" : "main-nav"}>
-          <Link href="/kategoria/meble-ogrodowe" onClick={() => setOpen(false)}>Meble</Link>
-          <Link href="/kategoria/pergole-i-zadaszenia" onClick={() => setOpen(false)}>Pergole</Link>
-          <Link href="/kategoria/donice-i-dekoracje" onClick={() => setOpen(false)}>Donice</Link>
-          <Link href="/kategoria/dla-zwierzat" onClick={() => setOpen(false)}>Dla zwierząt</Link>
-          <Link href="/#kolekcje" onClick={() => setOpen(false)}>Wszystko</Link>
+
+        <nav className={open ? "main-nav is-open" : "main-nav"} aria-label="Główna nawigacja">
+          <Link href="/" onClick={() => setOpen(false)}>Winiety</Link>
+          <Link href="/#jak-to-dziala" onClick={() => setOpen(false)}>Jak to działa</Link>
         </nav>
-        <Link className="tolla-chip" href="/#produkty">
+
+        <Link className="tolla-chip" href="/">
           <BagIcon />
           Kup winietę
         </Link>
