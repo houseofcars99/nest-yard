@@ -10,9 +10,9 @@ export function Header() {
 
   return (
     <>
-      <div className="announcement">Wybrane rzeczy do domu i ogrodu · bezpieczny zakup na Allegro</div>
+      <div className="announcement">Europejskie opłaty drogowe · winiety i road passes</div>
       <header className="site-header">
-        <Link className="brand" href="/" aria-label="Nest & Yard — strona główna">
+        <Link className="brand" href="/" aria-label="TOLLA — strona główna">
           <BrandLogo placement="header" />
         </Link>
         <button className="menu-button" type="button" onClick={() => setOpen((value) => !value)} aria-expanded={open}>
@@ -25,9 +25,9 @@ export function Header() {
           <Link href="/kategoria/dla-zwierzat" onClick={() => setOpen(false)}>Dla zwierząt</Link>
           <Link href="/#kolekcje" onClick={() => setOpen(false)}>Wszystko</Link>
         </nav>
-        <Link className="allegro-chip" href="/#produkty">
+        <Link className="tolla-chip" href="/#produkty">
           <BagIcon />
-          Kup na Allegro
+          Kup winietę
         </Link>
       </header>
     </>
