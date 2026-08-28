@@ -42,7 +42,7 @@ export default async function handler(req: Request) {
     body: JSON.stringify({
       from: FROM_EMAIL,
       to: [message.recipient_email],
-      subject: "VignetteGO – potwierdzenie zakupu winiety",
+      subject: "TOLLA – potwierdzenie zakupu winiety",
       text: `Potwierdzamy realizację zakupu winiety. Dokument potwierdzenia: ${signed.signedUrl}`,
     }),
   });
