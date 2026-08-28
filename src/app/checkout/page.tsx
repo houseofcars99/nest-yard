@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import "../hero-lifestyle.css";
+import { BrandLogo } from "@/components/BrandLogo";
 
 type CartItem = {
   id: string;
@@ -117,7 +118,10 @@ export default function CheckoutPage() {
 
   return (
     <main className="vignette-page checkout-page">
-      <nav className="topbar"><Link href="/" className="brand">TOLLA</Link><span className="checkout-step">CHECKOUT · 01 / 02</span></nav>
+      <nav className="topbar">
+        <Link href="/" className="brand" aria-label="TOLLA — strona główna"><BrandLogo placement="header" /></Link>
+        <span className="checkout-step">CHECKOUT · 01 / 02</span>
+      </nav>
       <section className="checkout-layout">
         <div>
           <Link href="/" className="back-link">← Wróć do wyboru winiety</Link>
@@ -146,6 +150,7 @@ export default function CheckoutPage() {
             <p className="price-note">Po kliknięciu nastąpi bezpieczne przekierowanie do operatora płatności.</p>
           </form>
         </div>
+
         <aside className="order-summary">
           <p className="eyebrow">TWOJE WINIETY</p>
           {!items.length ? <><h2>Koszyk jest pusty.</h2><Link href="/" className="primary-button link-button">Wybierz winietę</Link></> : <>
