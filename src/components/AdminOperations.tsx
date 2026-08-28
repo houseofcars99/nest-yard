@@ -5,9 +5,9 @@ import { demoInvoices, demoOrders, demoSettings } from "@/data/demo-commerce";
 import type { AllegroOrder, Invoice, InvoiceStatus, OrderStatus, StoreSettings } from "@/lib/commerce-types";
 import type { Product } from "@/lib/types";
 
-const ORDERS_KEY = "nest-and-yard-orders-v1";
-const INVOICES_KEY = "nest-and-yard-invoices-v1";
-const SETTINGS_KEY = "nest-and-yard-settings-v1";
+const ORDERS_KEY = "tolla-orders-v1";
+const INVOICES_KEY = "tolla-invoices-v1";
+const SETTINGS_KEY = "tolla-settings-v1";
 
 type Tab = "dashboard" | "orders" | "invoices" | "allegro" | "tools";
 type ApiStatus = { configured: boolean; connected: boolean; environment: "production" | "sandbox"; missing: string[] };
@@ -229,7 +229,7 @@ export function AdminOperations({ products }: { products: Product[] }) {
       buyerTaxId: manual.buyerTaxId,
       buyerAddress: manual.buyerAddress,
       buyerEmail: manual.buyerEmail,
-      notes: "Faktura wystawiona ręcznie w Nest & Yard.",
+      notes: "Faktura wystawiona ręcznie w TOLLA.",
       status: manual.buyerTaxId ? "KSEF_PENDING" : "ISSUED",
       ksefNumber: "",
       lines: [{ id: `line-${Date.now()}`, name: manual.name, quantity: manual.quantity, unit: "szt.", unitGross: manual.price, vatRate: manual.vat }],
@@ -296,5 +296,5 @@ export function AdminOperations({ products }: { products: Product[] }) {
 
 function InvoicePreview({ invoice }: { invoice: Invoice }) {
   const sum = totals(invoice);
-  return <article className="invoice-document"><header><div><span className="invoice-logo">N&Y</span><strong>{invoice.sellerName}</strong><small>{invoice.sellerAddress}</small><small>NIP: {invoice.sellerTaxId}</small></div><div><p>FAKTURA</p><h1>{invoice.number}</h1><span className={`invoice-status-badge status-${invoice.status.toLowerCase()}`}>{invoiceLabels[invoice.status]}</span></div></header><section className="invoice-parties"><div><span>Sprzedawca</span><strong>{invoice.sellerName}</strong><p>{invoice.sellerAddress}<br />NIP: {invoice.sellerTaxId}<br />Rachunek: {invoice.sellerBankAccount}</p></div><div><span>Nabywca</span><strong>{invoice.buyerName}</strong><p>{invoice.buyerAddress}{invoice.buyerTaxId ? <><br />NIP: {invoice.buyerTaxId}</> : null}<br />{invoice.buyerEmail}</p></div></section><section className="invoice-dates"><div><span>Data wystawienia</span><strong>{invoice.issueDate}</strong></div><div><span>Data sprzedaży</span><strong>{invoice.saleDate}</strong></div><div><span>Termin płatności</span><strong>{invoice.dueDate}</strong></div><div><span>Płatność</span><strong>{invoice.paymentMethod}</strong></div></section><table><thead><tr><th>Lp.</th><th>Nazwa</th><th>Ilość</th><th>Cena brutto</th><th>VAT</th><th>Wartość</th></tr></thead><tbody>{invoice.lines.map((line, index) => <tr key={line.id}><td>{index + 1}</td><td><strong>{line.name}</strong></td><td>{line.quantity} {line.unit}</td><td>{money(line.unitGross)}</td><td>{line.vatRate}%</td><td>{money(line.quantity * line.unitGross)}</td></tr>)}</tbody></table><section className="invoice-summary"><div><p>{invoice.notes}</p>{invoice.ksefNumber ? <p>Numer KSeF: {invoice.ksefNumber}</p> : null}</div><div><p><span>Netto</span><strong>{money(sum.net)}</strong></p><p><span>VAT</span><strong>{money(sum.vat)}</strong></p><p className="invoice-total"><span>Do zapłaty</span><strong>{money(sum.gross)}</strong></p></div></section><footer>Dokument demonstracyjny Nest & Yard. Faktura ustrukturyzowana wymaga przyjęcia przez KSeF.</footer></article>;
+  return <article className="invoice-document"><header><div><span className="invoice-logo">TOLLA</span><strong>{invoice.sellerName}</strong><small>{invoice.sellerAddress}</small><small>NIP: {invoice.sellerTaxId}</small></div><div><p>FAKTURA</p><h1>{invoice.number}</h1><span className={`invoice-status-badge status-${invoice.status.toLowerCase()}`}>{invoiceLabels[invoice.status]}</span></div></header><section className="invoice-parties"><div><span>Sprzedawca</span><strong>{invoice.sellerName}</strong><p>{invoice.sellerAddress}<br />NIP: {invoice.sellerTaxId}<br />Rachunek: {invoice.sellerBankAccount}</p></div><div><span>Nabywca</span><strong>{invoice.buyerName}</strong><p>{invoice.buyerAddress}{invoice.buyerTaxId ? <><br />NIP: {invoice.buyerTaxId}</> : null}<br />{invoice.buyerEmail}</p></div></section><section className="invoice-dates"><div><span>Data wystawienia</span><strong>{invoice.issueDate}</strong></div><div><span>Data sprzedaży</span><strong>{invoice.saleDate}</strong></div><div><span>Termin płatności</span><strong>{invoice.dueDate}</strong></div><div><span>Płatność</span><strong>{invoice.paymentMethod}</strong></div></section><table><thead><tr><th>Lp.</th><th>Nazwa</th><th>Ilość</th><th>Cena brutto</th><th>VAT</th><th>Wartość</th></tr></thead><tbody>{invoice.lines.map((line, index) => <tr key={line.id}><td>{index + 1}</td><td><strong>{line.name}</strong></td><td>{line.quantity} {line.unit}</td><td>{money(line.unitGross)}</td><td>{line.vatRate}%</td><td>{money(line.quantity * line.unitGross)}</td></tr>)}</tbody></table><section className="invoice-summary"><div><p>{invoice.notes}</p>{invoice.ksefNumber ? <p>Numer KSeF: {invoice.ksefNumber}</p> : null}</div><div><p><span>Netto</span><strong>{money(sum.net)}</strong></p><p><span>VAT</span><strong>{money(sum.vat)}</strong></p><p className="invoice-total"><span>Do zapłaty</span><strong>{money(sum.gross)}</strong></p></div></section><footer>Dokument demonstracyjny TOLLA. Faktura ustrukturyzowana wymaga przyjęcia przez KSeF.</footer></article>;
 }
